@@ -15,26 +15,29 @@
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 package com.adobe.dx.testing;
 
-import org.apache.sling.api.resource.ValueMap;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.sling.api.resource.ValueMap;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-public class AbstractTest {
-
-    protected final static String CONTENT_ROOT = "/content/foo";
-    protected final static String CONF_ROOT = "/conf/foo";
+class AbstractTestTest {
 
     protected final AemContext context = new AemContextBuilder()
         .plugin(CACONFIG)
         .build();
 
-    protected ValueMap getVM(String path) {
-        return context.resourceResolver().getResource(path).getValueMap();
+    @Test
+    public void test() {
+        context.build().resource(AbstractTest.CONTENT_ROOT, "foo", "bar", "blah", 2).commit();
+        AbstractTest test = new AbstractTest();
+        ValueMap properties = test.getVM(AbstractTest.CONTENT_ROOT);
+        assertTrue(properties.containsKey("foo"));
     }
 }
